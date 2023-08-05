@@ -1,0 +1,28 @@
+import { Notification as RawRotification } from '@prisma/client'
+import { Notification } from "@application/entities/notification";
+import { Content } from '@application/entities/content';
+
+export class PrismaNotificationMapper{
+  
+  static toPrisma(notification: Notification) {
+    return {
+      id: notification.id,
+      category: notification.category,
+      content: notification.content.value,
+      recipienteId: notification.recipientId,
+      readAt: notification.readAt,
+      createdAt: notification.createdAt
+    }
+  } 
+
+  static toDomain(raw: RawRotification): Notification {
+    return new Notification({
+      category: raw.category,
+      content: new Content(raw.content),
+      recipientId: raw.recipienteId,
+      readAt: raw.readAt,
+      canceledAt: raw.canceledAt,
+      createdAt: raw.createdAt
+    }, raw.id)
+  }
+}
